@@ -38,8 +38,7 @@ class Training:
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        distance = self.get_distance()
-        return distance / self.duration
+        return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -48,12 +47,11 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        training_type = self.__class__.__name__
-        distance = self.get_distance()
-        speed = self.get_mean_speed()
-        calories = self.get_spent_calories()
-        return InfoMessage(training_type, self.duration,
-                           distance, speed, calories)
+        return InfoMessage(self.__class__.__name__,
+                           self.duration,
+                           self.get_distance(),
+                           self.get_mean_speed(),
+                           self.get_spent_calories())
 
 
 class Running(Training):
@@ -63,14 +61,16 @@ class Running(Training):
 
     def __init__(self, action: int, duration: float, weight: float) -> None:
         super().__init__(action, duration, weight)
-        self.coeff_calorie_1 = 18
-        self.coeff_calorie_2 = 20
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий при беге."""
-        speed = self.get_mean_speed()
-        return (self.COEFF_CALORIE_1 * speed - self.COEFF_CALORIE_2) *\
-            self.weight / self.M_IN_KM * self.duration * self.TIME
+        return ((self.COEFF_CALORIE_1
+                * self.get_mean_speed()
+                - self.COEFF_CALORIE_2)
+                * self.weight
+                / self.M_IN_KM
+                * self.duration
+                * self.TIME)
 
 
 class SportsWalking(Training):
@@ -85,11 +85,14 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий при спортивной хотьбе."""
-        speed = self.get_mean_speed()
-        return (self.COEFF_CALORIE_1 * self.weight
-                + (speed ** 2 // self.height)
-                * self.COEFF_CALORIE_2 * self.weight)\
-            * self.duration * self.TIME
+        return ((self.COEFF_CALORIE_1
+                * self.weight
+                + (self.get_mean_speed()
+                 ** 2 // self.height)
+                * self.COEFF_CALORIE_2
+                * self.weight)
+                * self.duration
+                * self.TIME)
 
 
 class Swimming(Training):
@@ -110,21 +113,24 @@ class Swimming(Training):
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость плавания."""
-        return (self.length_pool * self.count_pool
-                / self.M_IN_KM / self.duration)
+        return (self.length_pool
+                * self.count_pool
+                / self.M_IN_KM
+                / self.duration)
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий при плавание."""
-        speed = self.get_mean_speed()
-        return (speed + self.COEFF_CALORIE_1) * self.COEFF_CALORIE_2 *\
-            self.weight
+        return ((self.get_mean_speed()
+                + self.COEFF_CALORIE_1)
+                * self.COEFF_CALORIE_2
+                * self.weight)
 
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
+    dict_workout_type = {'SWM': Swimming, 'RUN': Running,
+                         'WLK': SportsWalking}
     try:
-        dict_workout_type = {'SWM': Swimming, 'RUN': Running,
-                             'WLK': SportsWalking}
         return dict_workout_type[workout_type](*data)
 
     except KeyError:
@@ -135,8 +141,7 @@ def read_package(workout_type: str, data: list) -> Training:
 def main(training: Training) -> None:
     """Главная функция."""
     info = training.show_training_info()
-    message = info.get_message()
-    print(message)
+    print(info.get_message())
 
 
 if __name__ == '__main__':
