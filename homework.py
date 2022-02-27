@@ -42,8 +42,8 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        raise NotImplementedError("Переопроедлите метод get_spent_calories\
-                                   в type(self).name!")
+        raise NotImplementedError('Переопределите метод get_spent_calories в '
+                                  f'{type(self).__name__}')
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -132,10 +132,8 @@ def read_package(workout_type: str, data: list) -> Training:
                          'WLK': SportsWalking}
     try:
         return dict_workout_type[workout_type](*data)
-
     except KeyError:
-        print('Датчик определения вида активной деятельности вышел из строя')
-        exit(0)
+        raise KeyError('Заменить китайский датчик')
 
 
 def main(training: Training) -> None:
