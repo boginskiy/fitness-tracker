@@ -128,12 +128,14 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    dict_workout_type = {'SWM': Swimming, 'RUN': Running,
+    dict_workout_type: dict[str, Training] = {'SWM': Swimming, 'RUN': Running,
                          'WLK': SportsWalking}
-    try:
+
+    if workout_type not in dict_workout_type:
+        raise KeyError('Ошибка ввода ключа. На входе\
+                       должно быть SWM, RUN или WLK')
+    else:
         return dict_workout_type[workout_type](*data)
-    except KeyError:
-        raise KeyError('Заменить китайский датчик')
 
 
 def main(training: Training) -> None:
