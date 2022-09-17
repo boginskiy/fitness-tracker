@@ -36,5 +36,3 @@ python3 homework.py
 
 ### **Автор**
 [Богинский Дмитрий](https://github.com/boginskiy) - python разработчик
-
-[Яндекс.Практикум](https://practicum.yandex.ru/) - курс backend
